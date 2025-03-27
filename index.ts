@@ -12,7 +12,8 @@ const db = await mysql.createPool({
     database: process.env.DB_NAME,
     waitForConnections: true,
     connectionLimit: 10,
-    queueLimit: 0
+    queueLimit: 0,
+    timezone: 'Asia/Bangkok'
 });
 
 type Employee = {
@@ -46,7 +47,7 @@ async function fetchData(): Promise<Employee[]> {
         const [rows]: [Employee: [], any] = await db.query(`SELECT * FROM ${process.env.DB_TABLE} WHERE LogStatus IS NULL OR LogStatus = 0`);
         if (rows.length === 0) {
             console.log('No data to fetch. Exiting...');
-            process.exit(0);
+            return []
         }
         return rows;
     } catch (error) {
@@ -125,36 +126,37 @@ async function callAPI(employee: Employee) {
     }
     console.error(`❌ Failed to call API for ${employee.EmpID} after ${maxRetries} attempts. Exiting...`);
 }
+/*
+ (async function testAllFunctions() {
+    try {
+        console.log("🧪 Running test sequence...");
 
-// (async function testAllFunctions() {
-//     try {
-//         console.log("🧪 Running test sequence...");
+        // 1️⃣ Execute Stored Procedure
+        console.log("🚀 Executing stored procedure...");
+        await executeStoredProcedures();
+        console.log("✅ Stored procedure executed successfully!");
 
-//         // 1️⃣ Execute Stored Procedure
-//         console.log("🚀 Executing stored procedure...");
-//         await executeStoredProcedures();
-//         console.log("✅ Stored procedure executed successfully!");
+        // 2️⃣ Fetch Employees
+        console.log("🔍 Fetching employees...");
+        const employees = await fetchData();
+        console.log("✅ Employees fetched successfully:", employees);
 
-//         // 2️⃣ Fetch Employees
-//         console.log("🔍 Fetching employees...");
-//         const employees = await fetchData();
-//         console.log("✅ Employees fetched successfully:", employees);
+        // 3️⃣ Call API (มี Retry & Delay)
+        console.log("📤 Calling API for each employee...");
+        for (const employee of employees) {
+            await callAPI(employee);
+        }
 
-//         // 3️⃣ Call API (มี Retry & Delay)
-//         console.log("📤 Calling API for each employee...");
-//         for (const employee of employees) {
-//             await callAPI(employee);
-//         }
+        console.log("✅ All functions tested successfully!");
+        process.exit(0); // ออกจากโปรแกรมเมื่อทดสอบเสร็จ
+    } catch (error) {
+        console.error("❌ Test failed:", error);
+        process.exit(1); // ออกจากโปรแกรมพร้อม Error Code
+    }
+})(); 
+*/
 
-//         console.log("✅ All functions tested successfully!");
-//         process.exit(0); // ออกจากโปรแกรมเมื่อทดสอบเสร็จ
-//     } catch (error) {
-//         console.error("❌ Test failed:", error);
-//         process.exit(1); // ออกจากโปรแกรมพร้อม Error Code
-//     }
-// })();
-
-
+// /*
 // 🔄 Schedule งานให้รันทุกวัน 08:00 AM
 cron.schedule("0 8 * * *", async () => {
     console.log("🕗 Running scheduled task...");
@@ -171,4 +173,5 @@ cron.schedule("0 8 * * *", async () => {
     }
 
     console.log("✅ Task completed successfully.");
-});
+}); 
+// */
