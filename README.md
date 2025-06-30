@@ -42,3 +42,23 @@ DB_SP=your-stored-procedure-name
 DB_TABLE=your-table-name
 API_URL=https://your-api-endpoint
 AUTHORIZATION=base64-encoded-credentials
+```
+
+---
+
+## 🚀 Running the Script
+
+Install dependencies with Bun:
+```bash
+bun install
+```
+Run the script:
+```bash
+bun run index.ts
+```
+
+## 📌 Notes
+- This script is designed to exit automatically once tasks complete.
+- Always test in a staging environment before using in production.
+- Make sure your database user can execute the stored procedure and update records.
+
